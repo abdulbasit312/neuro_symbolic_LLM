@@ -1,0 +1,15 @@
+{
+    "model": "meta-llama/Llama-3.1-8B",
+    "epochs": 5,
+    "val_interval": 1,
+    "lr": 0.0003,
+    "batch_size": 64,
+    "accumulation_steps": 1,
+    "wandb": true,
+    "task": "train",
+    "training": "combined",
+    "verbose": true,
+    "parallel": false,
+    "quantization": true,
+    "random_split": -1
+}

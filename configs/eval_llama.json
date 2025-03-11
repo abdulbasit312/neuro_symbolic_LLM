@@ -1,0 +1,16 @@
+{
+    "model": "meta-llama/Llama-3.1-8B",
+    "epochs": 1,
+    "val_interval": 1,
+    "lr": 0.0003,
+    "batch_size": 64,
+    "accumulation_steps": 16,
+    "wandb": true,
+    "task": "eval",
+    "training": "combined",
+    "verbose": true,
+    "parallel": false,
+    "quantization": false,
+    "random_split": -1,
+    "checkpoint": "checkpoints/epoch-4-all_Llama-3.1-8B"
+}

@@ -1,0 +1,21 @@
+{
+    "runs": 1,
+    "model": "mistralai/Mistral-7B-Instruct-v0.1",
+    "epochs": 5,
+    "val_interval": 1,
+    "lr": 0.0003,
+    "patience": 3,
+    "batch_size": 8,
+    "accumulation_steps": 1,
+    "wandb": true,
+    "lmbda": 1,
+    "use_table_truth": false,
+    "factuality": true,
+    "task": "eval",
+    "training": "combined",
+    "staged_facts": true,
+    "staged_constraints": true,
+    "verbose": true,
+    "parallel": false,
+    "random_split": -1
+}

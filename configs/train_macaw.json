@@ -1,0 +1,15 @@
+{
+    "model": "allenai/macaw-large",
+    "epochs": 5,
+    "val_interval": 1,
+    "lr": 0.0003,
+    "batch_size": 64,
+    "accumulation_steps": 1,
+    "wandb": true,
+    "task": "train",
+    "training": "combined",
+    "constraint_type": "negation",
+    "verbose": true,
+    "parallel": false,
+    "random_split": -1
+}

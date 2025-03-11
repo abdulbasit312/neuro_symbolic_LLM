@@ -1,0 +1,7 @@
+data
+checkpoints
+*.out
+*.log
+*.slurm
+wandb
+logs
