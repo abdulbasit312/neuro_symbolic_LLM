@@ -92,7 +92,7 @@ class QA(nn.Module):
             "NousResearch/Llama-2-13b-hf": {
                 "type": "decoder"
             },
-            "meta-llama/Llama-3.1-8B": {
+            "meta-llama/Llama-3.2-3B": {
                 "type": "decoder"
             },
         }
@@ -201,7 +201,7 @@ class QA(nn.Module):
                 transformers.AutoTokenizer.from_pretrained,
                 transformers.AutoModelForCausalLM.from_pretrained,
             ),
-            "meta-llama/Llama-3.1-8B": (
+            "meta-llama/Llama-3.2-3B": (
                 lambda x: x,
                 lambda x: x,
                 transformers.AutoTokenizer.from_pretrained,
@@ -260,6 +260,7 @@ class QA(nn.Module):
                         bnb_4bit_quant_type='nf4'
                     ),
                     torch_dtype=torch.bfloat16,
+                    cache_dir="/w/331/abdulbasit/loco-llm/assets"
                 )
                 self.model.config.use_cache = False
                 self.model = prepare_model_for_kbit_training(self.model)

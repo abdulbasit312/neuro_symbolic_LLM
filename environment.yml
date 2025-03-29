@@ -76,9 +76,6 @@ dependencies:
   - pip=23.3.1=py310h06a4308_0
   - pysocks=1.7.1=py310h06a4308_0
   - python=3.10.13=h955ad1f_0
-  - pytorch=2.2.1=py3.10_cuda11.8_cudnn8.7.0_0
-  - pytorch-cuda=11.8=h7e8668a_5
-  - pytorch-mutex=1.0=cuda
   - pyyaml=6.0.1=py310h5eee18b_0
   - readline=8.2=h5eee18b_0
   - requests=2.31.0=py310h06a4308_1

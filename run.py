@@ -13,6 +13,8 @@ from models.loco.model import QA
 from models.loco.trainer import Trainer
 from torch.distributed import init_process_group, destroy_process_group
 from models.loco.trainer import DEFAULT_CONFIG
+import os
+os.environ["HUGGINGFACE_HUB_CACHE"] = "/w/331/abdulbasit/loco-llm/assets"
 
 torch.autograd.set_detect_anomaly(True)
 
