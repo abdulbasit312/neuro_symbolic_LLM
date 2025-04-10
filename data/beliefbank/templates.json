@@ -1,0 +1,156 @@
+{
+    "IsA":{
+        "simple_question":"Is {X} (a/an) {Y}?",
+        "assertion_positive":"{X} is {Y}.",
+        "assertion_negative":"{X} is not {Y}.",
+        "templates":[
+            "Is {X} {Y}?",
+            "Is it true that {X} is {Y}?"
+        ],
+        "templates_negated":[
+            "Is {X} not {Y}?",
+            "Is it true that {X} is not {Y}?"
+        ],
+        "backward_simple_question": "Does {Y} include {X} as a type?",
+        "backward_assertion_positive": "{Y} includes {X} as a type.",
+        "backward_assertion_negative": "{Y} does not include {X} as a type.",
+        "backward_templates": [
+            "Does {Y} include {X}?",
+            "Is it true that {Y} includes {X} as a type?"
+        ],
+        "backward_templates_negated": [
+            "Does {Y} not include {X}?",
+            "Is it true that {Y} does not include {X} as a type?"
+        ]
+    },
+    "HasPart":{
+        "simple_question":"Does {X} have (a/an) {Y}?",
+        "assertion_positive":"{X} has {Y}.",
+        "assertion_negative":"{X} does not have {Y}.",
+        "templates":[
+            "Does {X} have {Y}?",
+            "Is {Y} part of {X}?",
+            "Is it true that {Y} is part of {X}?",
+            "Is it true that {X} has {Y}?"
+        ],
+        "templates_negated":[
+            "Does {X} not have {Y}?",
+            "Is {Y} not part of {X}?",
+            "Is it true that {Y} is not part of {X}?",
+            "Is it true that {X} does not have {Y}?"
+        ],
+        "backward_simple_question": "Is {Y} part of {X}?",
+        "backward_assertion_positive": "{Y} is part of {X}.",
+        "backward_assertion_negative": "{Y} is not part of {X}.",
+        "backward_templates": [
+            "Is {Y} a part of {X}?",
+            "Is it true that {Y} is part of {X}?"
+        ],
+        "backward_templates_negated": [
+            "Is {Y} not a part of {X}?",
+            "Is it true that {Y} is not part of {X}?"
+        ]
+    },
+    "CapableOf":{
+        "simple_question":"Can {X} {Y}?",
+        "assertion_positive":"{X} can {Y}.",
+        "assertion_negative":"{X} cannot {Y}.",
+        "templates":[
+            "Can {X} {Y}?",
+            "Is it true that {X} can {Y}?",
+            "Is {X} able to {Y}?",
+            "Is it true that {X} is able to {Y}?"
+        ],
+        "templates_negated":[
+            "Can {X} not {Y}?",
+            "Is it true that {X} cannot {Y}?",
+            "Is {X} able not to {Y}?",
+            "Is it true that {X} is not able to {Y}?"
+        ],
+        "backward_simple_question": "Is {Y} an ability of {X}?",
+        "backward_assertion_positive": "{Y} is an ability of {X}.",
+        "backward_assertion_negative": "{Y} is not an ability of {X}.",
+        "backward_templates": [
+            "Is {Y} something {X} can do?",
+            "Is it true that {Y} is an ability of {X}?"
+        ],
+        "backward_templates_negated": [
+            "Is {Y} not something {X} can do?",
+            "Is it true that {Y} is not an ability of {X}?"
+        ]
+
+    },
+    "MadeOf":{
+        "simple_question":"Is {X} made of {Y}?",
+        "assertion_positive":"{X} is made of {Y}.",
+        "assertion_negative":"{X} is not made of {Y}.",
+        "templates":[
+            "Is {X} made of {Y}?",
+            "Is it true that {X} is made of {Y}?"
+        ],
+        "templates_negated":[
+            "Is {X} not made of {Y}?",
+            "Is it true that {X} is not made of {Y}?"
+        ],
+        "backward_simple_question": "Does {Y} constitute {X}?",
+        "backward_assertion_positive": "{Y} constitutes {X}.",
+        "backward_assertion_negative": "{Y} does not constitute {X}.",
+        "backward_templates": [
+            "Is {Y} a material of {X}?",
+            "Is it true that {Y} constitutes {X}?"
+        ],
+        "backward_templates_negated": [
+            "Is {Y} not a material of {X}?",
+            "Is it true that {Y} does not constitute {X}?"
+        ]
+    },
+    "HasProperty":{
+        "simple_question":"Is {X} {Y}?",
+        "assertion_positive":"{X} is {Y}.",
+        "assertion_negative":"{X} is not {Y}.",
+        "templates":[
+            "Is {X} {Y}?",
+            "Is it true that {X} is {Y}?"
+        ],
+        "templates_negated":[
+            "Is {X} not {Y}?",
+            "Is it true that {X} is not {Y}?"
+        ],
+        "backward_simple_question": "Does {Y} characterize {X}?",
+        "backward_assertion_positive": "{Y} characterizes {X}.",
+        "backward_assertion_negative": "{Y} does not characterize {X}.",
+        "backward_templates": [
+            "Is {Y} a property of {X}?",
+            "Is it true that {Y} characterizes {X}?"
+        ],
+        "backward_templates_negated": [
+            "Is {Y} not a property of {X}?",
+            "Is it true that {Y} does not characterize {X}?"
+        ]
+    },
+    "HasA":{
+        "simple_question":"Does {X} have (a/an) {Y}?",
+        "assertion_positive":"{X} has {Y}.",
+        "assertion_negative":"{X} does not have {Y}.",
+        "templates":[
+            "Does {X} have {Y}?",
+            "Is it true that {X} has {Y}?"
+        ],
+        "templates_negated":[
+            "Does {X} not have {Y}?",
+            "Is it true that {X} has not {Y}?"
+        ],
+        "backward_simple_question": "Is {Y} possessed by {X}?",
+        "backward_assertion_positive": "{Y} is possessed by {X}.",
+        "backward_assertion_negative": "{Y} is not possessed by {X}.",
+        "backward_templates": [
+            "Is {Y} something {X} has?",
+            "Is it true that {Y} is possessed by {X}?"
+        ],
+        "backward_templates_negated": [
+            "Is {Y} not something {X} has?",
+            "Is it true that {Y} is not possessed by {X}?"
+        ]
+
+    }
+}

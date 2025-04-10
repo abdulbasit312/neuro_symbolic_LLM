@@ -111,7 +111,7 @@ class Trainer():
         return "verbose" in self.config and self.config["verbose"]
 
     def log_outputs(self, line):
-        with open(self.path_outputs_log, "a") as f:
+        with open(self.path_outputs_log, "a", encoding="utf-8") as f:
             f.write(line)
 
     def log_step(self, log:object, progressbar:object=None):

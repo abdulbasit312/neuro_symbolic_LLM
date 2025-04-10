@@ -48,7 +48,7 @@ def main(rank:int, world_size:int, config:object, wandb_run:object, run_parallel
     # Load model
     if "checkpoint" in config:
         print(f"[-] Loading LoRA adapter: {config['checkpoint']}")
-        model.model.load_adapter(config['checkpoint'])
+        model.model.load_adapter("/scratch/expires-2025-Apr-10/abdulbasit/cktp/checkpoints/"+config['checkpoint'],adapter_name="dddde")
     
     model.to(rank)
 

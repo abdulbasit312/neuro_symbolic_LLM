@@ -260,7 +260,7 @@ class QA(nn.Module):
                         bnb_4bit_quant_type='nf4'
                     ),
                     torch_dtype=torch.bfloat16,
-                    cache_dir="/w/331/abdulbasit/loco-llm/assets"
+                    cache_dir="/w/331/svajpayee/neuro_symbolic_LLM/assets"
                 )
                 self.model.config.use_cache = False
                 self.model = prepare_model_for_kbit_training(self.model)

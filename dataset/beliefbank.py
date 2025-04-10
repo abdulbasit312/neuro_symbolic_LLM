@@ -78,6 +78,8 @@ class Constraints(data.Dataset):
         for constraint in general_constraints: # for each principle
             knows_antecedent = constraint["antecedent"] in hash_facts.keys()
             knows_consequent = constraint["consequent"] in hash_facts.keys()
+            direction = constraint["direction"]  # Use the direction from get_links
+            ## add direction
             # include grounded fact symbols if known in the training facts set 
             # add all constraints for which this antecedent is known
             if knows_antecedent:
@@ -86,8 +88,8 @@ class Constraints(data.Dataset):
                     sample = {
                         "antecedent": belief["fact"], 
                         "neg_antecedent": belief["negated_fact"], 
-                        "consequent": Facts.implication2string(templates=templates, uncountables=uncountables, subject=subj, relation=rel, symbol=True, obj=obj),
-                        "neg_consequent": Facts.implication2string(templates=templates, uncountables=uncountables, subject=subj, relation=rel, symbol=False, obj=obj),
+                        "consequent": Facts.implication2string(templates=templates, uncountables=uncountables, subject=subj, relation=rel, symbol=True, obj=obj, direction=direction),
+                        "neg_consequent": Facts.implication2string(templates=templates, uncountables=uncountables, subject=subj, relation=rel, symbol=False, obj=obj, direction=direction),
                         "s_antecedent": int(constraint["s_antecedent"]), 
                         "s_consequent": int(constraint["s_consequent"]),
                         "g_antecedent": belief["belief"],
@@ -102,8 +104,8 @@ class Constraints(data.Dataset):
                     sample = {
                         "consequent": belief["fact"], 
                         "neg_consequent": belief["negated_fact"], 
-                        "antecedent": Facts.implication2string(templates=templates, uncountables=uncountables, subject=subj, relation=rel, symbol=True, obj=obj),
-                        "neg_antecedent": Facts.implication2string(templates=templates, uncountables=uncountables, subject=subj, relation=rel, symbol=False, obj=obj),
+                        "antecedent": Facts.implication2string(templates=templates, uncountables=uncountables, subject=subj, relation=rel, symbol=True, obj=obj, direction= direction),
+                        "neg_antecedent": Facts.implication2string(templates=templates, uncountables=uncountables, subject=subj, relation=rel, symbol=False, obj=obj, direction= direction),
                         "s_antecedent": int(constraint["s_antecedent"]), 
                         "s_consequent": int(constraint["s_consequent"]),
                         "g_antecedent": -1,
@@ -111,7 +113,7 @@ class Constraints(data.Dataset):
                     }
                     samples.append(sample)
         return samples
-
+    ## added backward direction links
     @staticmethod
     def get_links(path) -> (List[object]):
         """ Load all logical constraints and index by source edge 
@@ -125,13 +127,16 @@ class Constraints(data.Dataset):
             constraints = json.load(f)
         links = []
         for rel in constraints["links"]:
-            if rel["direction"] == "forward":
+            ##add both forward and backward (disabled backward since we don't want B->A from A->B)
+            if rel["direction"] in ["forward"]:
                 source = rel["source"]
                 source_symbol =  rel["weight"].split("_")[0] == "yes"
                 target = rel["target"]
                 target_symbol =  rel["weight"].split("_")[1] == "yes"
-                sample = {"antecedent": source, "consequent": target, "s_antecedent": source_symbol, "s_consequent": target_symbol}
+                sample = {"antecedent": source, "consequent": target, "s_antecedent": source_symbol, "s_consequent": target_symbol, "direction": "forward" }
                 links.append(sample)
+                ## sample for backward
+                #sample = {"antecedent": target, "consequent": source, "s_antecedent": target_symbol, "s_consequent": source_symbol, "direction": "backward"}
         return links  
 
     def __len__(self):
@@ -147,7 +152,7 @@ class Facts():
         self.constraints = constraints
         self.facts_path = facts_path
         self.model_type = model_type
-
+    ## here we add the backward facts in NL as well (Albatross is a Bird --> Bird includes Albatross as a type)
     def get_whole_set(self) -> dict:
         """  Convert the BeliefBank facts into a set of NL samples """
         templates, uncountables = Facts.get_language_templates(
@@ -159,10 +164,28 @@ class Facts():
             for subject, subject_facts in facts.items():
                 for key, belief in subject_facts.items():
                     relation, obj = key.split(",")
-                    fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=True, obj=obj)
-                    negated_fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=False, obj=obj)
-                    sample = {"subject": subject, "predicate": key, "fact": fact, "negated_fact": negated_fact, "belief": int(belief == "yes")}
+                    fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=True, obj=obj, direction="forward")
+                    negated_fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=False, obj=obj, direction="forward")
+                    sample = {
+                        "subject": subject,
+                        "predicate": key,
+                        "fact": fact,
+                        "negated_fact": negated_fact,
+                        "belief": int(belief == "yes")}
                     samples.append(sample)
+                    ## Backward sample (for both yes and no)
+                    ## subject and obj flipping is not required since it is handled in my templates.json 
+                    backward_fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=True, obj=obj, direction="backward")
+                    backward_negated = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=False, obj=obj, direction="backward")
+                    backward_sample = {
+                        "subject": obj,  # Reverse subject to obj
+                        "predicate": key,  # Keep same predicate for reference
+                        "fact": backward_fact,
+                        "negated_fact": backward_negated,
+                        "belief": int(belief == "yes")  # Belief matches forward fact
+                    }
+                    samples.append(backward_sample)
+
         return samples
     
     def get_multihop_splits(self) -> dict:
@@ -180,8 +203,8 @@ class Facts():
                 for key, belief in subject_facts.items(): # key is the relashionship, belief is the binary assignment
                     relation, obj = key.split(",")
                     # construct constraint sample
-                    fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=True, obj=obj)
-                    negated_fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=False, obj=obj)
+                    fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=True, obj=obj, direction="forward")
+                    negated_fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=False, obj=obj, direction="forward")
                     sample = {"subject": subject, "predicate": key, "fact": fact, "negated_fact": negated_fact, "belief": int(belief == "yes")}
                     # key is B
                     # First hop: A -> B, B is in consequents
@@ -206,20 +229,36 @@ class Facts():
             for subject, subject_facts in facts.items():
                 for key, belief in subject_facts.items():
                     relation, obj = key.split(",")
-                    fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=True, obj=obj)
-                    negated_fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=False, obj=obj)
+                    fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=True, obj=obj, direction="forward")
+                    negated_fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=False, obj=obj, direction="forward")
                     sample = {"subject": subject, "predicate": key, "fact": fact, "negated_fact": negated_fact, "belief": int(belief == "yes")}
+                    ## add backward sample here too
+                    backward_fact = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=True, obj=obj, direction="backward")
+                    backward_negated = Facts.implication2string(templates=templates, uncountables=uncountables, subject=subject, relation=relation, symbol=False, obj=obj, direction="backward")
+                    backward_sample = {
+                        "subject": obj,  # consistent with get_whole_set
+                        "predicate": key,
+                        "fact": backward_fact,
+                        "negated_fact": backward_negated,
+                        "belief": int(belief == "yes")
+                    }
                     # test = consequents
-                    if key in c_consequents and key not in c_antecedents: con_facts.append(sample)
+                    if key in c_consequents and key not in c_antecedents:
+                        con_facts.append(sample)
+                        con_facts.append(backward_sample)
                     # test = antecedents
-                    else: ant_facts.append(sample) 
+                    else: 
+                        ant_facts.append(sample)
+                        ant_facts.append(backward_sample) 
+
         idx_val = random.sample(range(0, len(ant_facts)-1), int(0.1 * len(ant_facts)))
         train_ant_facts = [ant_facts[idx] for idx in range(len(ant_facts)) if idx not in idx_val]
         val_ant_facts = [ant_facts[idx] for idx in idx_val]
         return {"train": train_ant_facts, "test": con_facts, "val": val_ant_facts}
-        
+    
+    ## added direction
     @staticmethod
-    def implication2string(templates, uncountables, subject, relation, symbol, obj):
+    def implication2string(templates, uncountables, subject, relation, symbol, obj, direction):
         """ From implication object, convert into natural relation"""
         this_template = templates[relation]
         X = Facts.noun_fluenterer(subject, uncountables)
@@ -227,8 +266,13 @@ class Facts():
         rng = random.randint(0, 1)
         # questions: templates, templates_negated
         # statements: assertion_positive, assertion_negative
-        if symbol: nl_question = this_template['assertion_positive'].format(X=X, Y=Y)
-        else: nl_question = this_template['assertion_negative'].format(X=X, Y=Y)
+        if direction == "forward":
+            if symbol: nl_question = this_template['assertion_positive'].format(X=X, Y=Y)
+            else: nl_question = this_template['assertion_negative'].format(X=X, Y=Y)
+        else:
+            if symbol: nl_question = this_template['backward_assertion_positive'].format(X=X, Y=Y)
+            else: nl_question = this_template['backward_assertion_negative'].format(X=X, Y=Y)
+
         return nl_question
     
     @staticmethod
