@@ -3,5 +3,6 @@ checkpoints
 *.log
 *.slurm
 wandb
+**__pycache__**
 logs
 assets
